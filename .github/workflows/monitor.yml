@@ -22,8 +22,12 @@ jobs:
         curl --silent https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq -r '.sha' > .versions/setuptools-version.json
         curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq -r '.sha' > .versions/buildout-version.json
 
-    - name: commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+    - name: create pull request
+      uses: peter-evans/create-pull-request@v6
       with:
-        commit_message: 🤖 Automated update of source version
-        file_pattern: '.versions/*.json'
+        commit-message: 🤖 Automated update of source version
+        branch: source-version
+        delete-branch: true
+        title: 'Update .versions'
+        body: |
+          Update detected from monitor task
