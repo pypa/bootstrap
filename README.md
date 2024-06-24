@@ -13,11 +13,26 @@ This repository hosts the assets used to build and serve the service.
 You can construct and test the image locally after cloning the repository
 
 ```shell
-docker build -t getpip .
-docker run --rm -p 8080:8000 getpip
+docker build -t bootstrap_pypa_io .
+docker run --rm -p 8080:8000 bootstrap_pypa_io
 ```
 
 The service is then available at `http://localhost:8080`
+
+You can build from a different version of a given source using Docker build-args:
+
+```shell
+docker build -t bootstrap_pypa_io --build-arg get_pip_branch=24.1 .
+```
+
+Current args are:
+
+```
+ARG get_pip_branch=main
+ARG get_virtualenv_branch=main
+ARG setuptools_branch=bootstrap
+ARG buildout_branch=bootstrap-release
+```
 
 ## Dockerfile
 
