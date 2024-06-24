@@ -50,3 +50,18 @@ and [buildout](https://github.com/buildout/buildout/tree/bootstrap-release).
 
 [`purge.sh`](purge.sh) is run after successful deployments to purge all
 files served by `bootstrap.pypa.io`.
+
+## Updating
+
+Changes to upstream sources are tracked via the
+[monitor](.github/workflows/monitor.yml)
+GitHub Action.
+
+When changes are detected, a
+[Pull Request](https://github.com/pypa/bootstrap/pull/3)
+will automatically be opened.
+
+Once merged, a
+[deployment](https://github.com/pypa/bootstrap/deployments)
+will automatically be started. Once complete the [`purge.sh`](purge.sh)
+script will be run to purge the CDN cache.
