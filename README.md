@@ -58,10 +58,10 @@ Changes to upstream sources are tracked via the
 GitHub Action.
 
 When changes are detected, a
-[Pull Request](https://github.com/pypa/bootstrap/pull/3)
-will automatically be opened.
+[commit)(https://github.com/pypa/bootstrap/commit/29e93d5e3e26bce890905906b634488c5b3416ec)
+will automatically be created.
 
-Once merged, a
+Once our ["tests"](.github/workflows/ci.yml) have passed, a
 [deployment](https://github.com/pypa/bootstrap/deployments)
 will automatically be started. Once complete the [`purge.sh`](purge.sh)
 script will be run to purge the CDN cache.
