@@ -1,0 +1,29 @@
+name: Monitor source repositories
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: check
+      run: |
+        curl --silent https://api.github.com/repos/pypa/get-pip/commits/main                   | jq -r '.sha' > .versions/get-pip-version.json
+        curl --silent https://api.github.com/repos/pypa/get-virtualenv/commits/main            | jq -r '.sha' > .versions/get-virtualenv-version.json
+        curl --silent https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq -r '.sha' > .versions/setuptools-version.json
+        curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq -r '.sha' > .versions/bootstrap-release-version.json
+
+    - name: commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 🤖 Automated update of source version
+        file_pattern: '.versions/*.json'
