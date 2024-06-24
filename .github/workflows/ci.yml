@@ -1,0 +1,10 @@
+name: CI
+on:
+  - push
+  - pull_request
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dummy CI
+      run: echo "OK"
