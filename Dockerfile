@@ -1,24 +1,42 @@
-FROM alpine/git:2.45.2 AS fetch
+FROM alpine/git:2.45.2 AS fetch-base
 
 RUN mkdir -p /srv/src
-RUN mkdir -p /srv/html
 
-RUN git clone --filter=tree:0 https://github.com/pypa/get-pip.git /srv/src/pip
-RUN cp -r /srv/src/pip/public /srv/html/pip
-RUN cp /srv/src/pip/public/get-pip.py /srv/html/get-pip.py
+FROM fetch-base AS fetch-get-pip
+ARG get_pip_branch=main
+ADD https://api.github.com/repos/pypa/get-pip/commits/${get_pip_branch} get-pip-version.json
+RUN git clone --filter=tree:0 --branch ${get_pip_branch} https://github.com/pypa/get-pip.git /srv/src/pip
 
-RUN git clone --filter=tree:0 https://github.com/pypa/get-virtualenv.git /srv/src/virtualenv
-RUN cp -r /srv/src/virtualenv/public /srv/html/virtualenv
-RUN cp /srv/src/virtualenv/public/virtualenv.pyz /srv/html/virtualenv.pyz
+FROM fetch-base as fetch-get-virtualenv
+ARG get_virtualenv_branch=main
+ADD https://api.github.com/repos/pypa/get-virtualenv/commits/${get_virtualenv_branch} get-virtualenv-version.json
+RUN git clone --filter=tree:0 --branch ${get_virtualenv_branch} https://github.com/pypa/get-virtualenv.git /srv/src/virtualenv
 
-RUN git clone --filter=tree:0 --branch bootstrap https://github.com/pypa/setuptools /srv/src/setuptools
-RUN cp /srv/src/setuptools/ez_setup.py /srv/html/ez_setup.py
+FROM fetch-base as fetch-setuptools
+ARG setuptools_branch=bootstrap
+ADD https://api.github.com/repos/pypa/setuptools/commits/${setuptools_branch} setuptools-version.json
+RUN git clone --filter=tree:0 --branch ${setuptools_branch} https://github.com/pypa/setuptools /srv/src/setuptools
 
-RUN git clone --filter=tree:0 --branch bootstrap-release https://github.com/buildout/buildout.git /srv/src/buildout
-RUN cp /srv/src/buildout/bootstrap/bootstrap.py /srv/html/bootstrap-buildout.py
+FROM fetch-base AS fetch-buildout
+ARG buildout_branch=bootstrap-release
+ADD https://api.github.com/repos/buildout/buildout/commits/${buildout_branch} buildout-version.json
+RUN git clone --filter=tree:0 --branch ${buildout_branch} https://github.com/buildout/buildout.git /srv/src/buildout
 
 
-FROM nginx:1.27.0-alpine-slim AS serve
+FROM scratch AS build
+
+COPY --from=fetch-get-pip /srv/src/pip/public /html/pip
+COPY --from=fetch-get-pip /srv/src/pip/public/get-pip.py /html/get-pip.py
+
+COPY --from=fetch-get-virtualenv /srv/src/virtualenv/public /html/virtualenv
+COPY --from=fetch-get-virtualenv /srv/src/virtualenv/public/virtualenv.pyz /html/virtualenv.pyz
+
+COPY --from=fetch-setuptools /srv/src/setuptools/ez_setup.py /html/ez_setup.py
+
+COPY --from=fetch-buildout /srv/src/buildout/bootstrap/bootstrap.py /html/bootstrap-buildout.py
+
+
+FROM nginx:1.27.0-alpine-slim
 RUN apk add curl
 
 RUN rm -rf /usr/share/nginx/html
@@ -27,10 +45,10 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/run/cabotage
 RUN chown nobody:nobody /var/run/cabotage
 
+COPY purge.sh /usr/local/bin/purge.sh
+
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY get-pip.conf /etc/nginx/conf.d/get-pip.conf
-COPY --from=fetch /srv/html /usr/share/nginx/html
-
-COPY purge.sh /usr/local/bin/purge.sh
+COPY --from=build /html /usr/share/nginx/html
 
 USER nobody
