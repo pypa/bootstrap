@@ -58,7 +58,7 @@ Changes to upstream sources are tracked via the
 GitHub Action.
 
 When changes are detected, a
-[commit)(https://github.com/pypa/bootstrap/commit/29e93d5e3e26bce890905906b634488c5b3416ec)
+[commit](https://github.com/pypa/bootstrap/commit/29e93d5e3e26bce890905906b634488c5b3416ec)
 will automatically be created.
 
 Once our ["tests"](.github/workflows/ci.yml) have passed, a
