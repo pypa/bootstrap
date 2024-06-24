@@ -23,12 +23,18 @@ jobs:
         curl --silent https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq -r '.sha' > .versions/setuptools-version.json
         curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq -r '.sha' > .versions/buildout-version.json
 
-    - name: create pull request
-      uses: peter-evans/create-pull-request@v6
+    - name: commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit-message: 🤖 Automated update of source version
-        branch: source-version
-        delete-branch: true
-        title: 'Update .versions'
-        body: |
-          Update detected from monitor task
+        commit_message: 🤖 Automated update of source version
+        file_pattern: '.versions/*.json'
+
+    - name: trigger ci workflow
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.repos.createDispatchEvent({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            event_type: 'automated-update-trigger',
+          });
