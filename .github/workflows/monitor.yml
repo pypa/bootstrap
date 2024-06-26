@@ -23,7 +23,7 @@ jobs:
         curl --silent https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq -r '.sha' > .versions/setuptools-version.json
         curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq -r '.sha' > .versions/buildout-version.json
         grep 'null' .versions/*
-        if [ $? -eq 0 ]; then git reset --hard; fi
+        if [ $? -eq 0 ]; then git reset --hard; else exit 0; fi
 
     - name: commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
