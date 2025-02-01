@@ -7,12 +7,12 @@ ARG get_pip_branch=main
 ADD https://api.github.com/repos/pypa/get-pip/commits/${get_pip_branch} get-pip-version.json
 RUN git clone --filter=tree:0 --branch ${get_pip_branch} https://github.com/pypa/get-pip.git /srv/src/pip
 
-FROM fetch-base as fetch-get-virtualenv
+FROM fetch-base AS fetch-get-virtualenv
 ARG get_virtualenv_branch=main
 ADD https://api.github.com/repos/pypa/get-virtualenv/commits/${get_virtualenv_branch} get-virtualenv-version.json
 RUN git clone --filter=tree:0 --branch ${get_virtualenv_branch} https://github.com/pypa/get-virtualenv.git /srv/src/virtualenv
 
-FROM fetch-base as fetch-setuptools
+FROM fetch-base AS fetch-setuptools
 ARG setuptools_branch=bootstrap
 ADD https://api.github.com/repos/pypa/setuptools/commits/${setuptools_branch} setuptools-version.json
 RUN git clone --filter=tree:0 --branch ${setuptools_branch} https://github.com/pypa/setuptools /srv/src/setuptools
