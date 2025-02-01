@@ -14,7 +14,7 @@ You can construct and test the image locally after cloning the repository
 
 ```shell
 docker build -t bootstrap_pypa_io .
-docker run --rm -p 8080:8000 bootstrap_pypa_io
+docker run --rm -p 8080:8080 bootstrap_pypa_io
 ```
 
 The service is then available at `http://localhost:8080`
