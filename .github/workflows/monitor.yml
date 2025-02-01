@@ -18,10 +18,10 @@ jobs:
 
     - name: check
       run: |
-        curl --silent https://api.github.com/repos/pypa/get-pip/commits/main                   | jq -r '.sha' > .versions/get-pip-version.json
-        curl --silent https://api.github.com/repos/pypa/get-virtualenv/commits/main            | jq -r '.sha' > .versions/get-virtualenv-version.json
-        curl --silent https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq -r '.sha' > .versions/setuptools-version.json
-        curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq -r '.sha' > .versions/buildout-version.json
+        curl --silent https://api.github.com/repos/pypa/get-pip/commits/main                   | jq --exit-status -r '.sha' > .versions/get-pip-version.json
+        curl --silent https://api.github.com/repos/pypa/get-virtualenv/commits/main            | jq --exit-status -r '.sha' > .versions/get-virtualenv-version.json
+        curl --silent https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq --exit-status -r '.sha' > .versions/setuptools-version.json
+        curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq --exit-status -r '.sha' > .versions/buildout-version.json
 
     - name: commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
