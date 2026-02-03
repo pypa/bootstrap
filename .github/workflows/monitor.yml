@@ -24,7 +24,7 @@ jobs:
         curl --silent https://api.github.com/repos/buildout/buildout/commits/bootstrap-release | jq --exit-status -r '.sha' > .versions/buildout-version.json
 
     - name: commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v7
       with:
         commit_message: 🤖 Automated update of source version
         file_pattern: '.versions/*.json'
