@@ -6,6 +6,9 @@ on:
   pull_request:
   repository_dispatch:
     types: [automated-update-trigger]
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
