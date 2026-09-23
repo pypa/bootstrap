@@ -31,7 +31,6 @@ Current args are:
 ARG get_pip_branch=main
 ARG get_virtualenv_branch=main
 ARG setuptools_branch=bootstrap
-ARG buildout_branch=bootstrap-release
 ```
 
 ## Dockerfile
@@ -42,7 +41,7 @@ The [`Dockerfile`](Dockerfile)
 [get-pip](https://github.com/pypa/get-pip.git),
 [get-virtualenv](https://github.com/pypa/get-virtualenv.git),
 [setuptools](https://github.com/pypa/setuptools/tree/bootstrap),
-and [buildout](https://github.com/buildout/buildout/tree/bootstrap-release).
+and buildout's `bootstrap.py` from commit [`30365f4`](https://github.com/buildout/buildout/blob/30365f43540aa37ae280b7afab32dc31b860dc3a/bootstrap/bootstrap.py).
 1. Constructs the directory that will be served at bootstrap.pypa.io
 1. Builds a container for serving the directory via nginx and executing CDN purges 
 

@@ -18,9 +18,9 @@ ADD https://api.github.com/repos/pypa/setuptools/commits/${setuptools_branch} se
 RUN git clone --filter=tree:0 --branch ${setuptools_branch} https://github.com/pypa/setuptools /srv/src/setuptools
 
 FROM fetch-base AS fetch-buildout
-ARG buildout_branch=bootstrap-release
-ADD https://api.github.com/repos/buildout/buildout/commits/${buildout_branch} buildout-version.json
-RUN git clone --filter=tree:0 --branch ${buildout_branch} https://github.com/buildout/buildout.git /srv/src/buildout
+# buildout deleted its bootstrap-release branch; this is the last commit it pointed to
+ADD https://raw.githubusercontent.com/buildout/buildout/30365f43540aa37ae280b7afab32dc31b860dc3a/bootstrap/bootstrap.py /srv/src/buildout/bootstrap/bootstrap.py
+RUN chmod 0644 /srv/src/buildout/bootstrap/bootstrap.py
 
 
 FROM scratch AS build
