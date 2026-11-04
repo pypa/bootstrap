@@ -23,7 +23,7 @@ jobs:
         curl --fail --silent --show-error https://api.github.com/repos/pypa/setuptools/commits/bootstrap           | jq --exit-status -r '.sha' > .versions/setuptools-version.json
 
     - name: commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+      uses: stefanzweifel/git-auto-commit-action@v7
       with:
         commit_message: 🤖 Automated update of source version
         file_pattern: '.versions/*.json'
